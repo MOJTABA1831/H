@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>چک‌باکس نئونی قلب بنفش</title>
+  <style>
+    /* From Uiverse.io by 00Kubi — Modified by You */
+    .neon-checkbox {
+      --primary: #d800ff;        /* بنفش نئونی اصلی */
+      --primary-dark: #a000cc;   /* بنفش تیره‌تر برای border */
+      --primary-light: #f0aaff;  /* بنفش روشن برای جلوه‌ها */
+      --size: 40px;              /* کمی بزرگ‌تر برای دید بهتر قلب */
+      position: relative;
+      width: var(--size);
+      height: var(--size);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .neon-checkbox input {
+      display: none;
+    }
+
+    .neon-checkbox__frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .neon-checkbox__box {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 6px; /* کمی گردتر برای قلب */
+      border: 2px solid var(--primary-dark);
+      transition: all 0.4s ease;
+    }
+
+    .neon-checkbox__check-container {
+      position: absolute;
+      inset: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* قلب به‌جای تیک */
+    .neon-checkbox__check {
+      width: 70%;
+      height: 70%;
+      fill: var(--primary);       /* پر کردن قلب با رنگ بنفش */
+      stroke: none;               /* بدون خط دور */
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .neon-checkbox__glow {
+      position: absolute;
+      inset: -2px;
+      border-radius: 8px;
+      background: var(--primary);
+      opacity: 0;
+      filter: blur(8px);
+      transform: scale(1.2);
+      transition: all 0.4s ease;
+    }
+
+    .neon-checkbox__borders {
+      position: absolute;
+      inset: 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .neon-checkbox__borders span {
+      position: absolute;
+      width: 40px;
+      height: 1px;
+      background: var(--primary);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .neon-checkbox__borders span:nth-child(1) { top: 0; left: -100%; animation: borderFlow1 2s linear infinite; }
+    .neon-checkbox__borders span:nth-child(2) { top: -100%; right: 0; width: 1px; height: 40px; animation: borderFlow2 2s linear infinite; }
+    .neon-checkbox__borders span:nth-child(3) { bottom: 0; right: -100%; animation: borderFlow3 2s linear infinite; }
+    .neon-checkbox__borders span:nth-child(4) { bottom: -100%; left: 0; width: 1px; height: 40px; animation: borderFlow4 2s linear infinite; }
+
+    .neon-checkbox__particles span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      box-shadow: 0 0 6px var(--primary);
+    }
+
+    .neon-checkbox__rings {
+      position: absolute;
+      inset: -20px;
+      pointer-events: none;
+    }
+
+    .neon-checkbox__rings .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--primary);
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    .neon-checkbox__sparks span {
+      position: absolute;
+      width: 20px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      opacity: 0;
+    }
+
+    /* Hover */
+    .neon-checkbox:hover .neon-checkbox__box {
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    /* Checked State — نمایش قلب */
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__box {
+      border-color: var(--primary);
+      background: rgba(216, 0, 255, 0.1);
+    }
+
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__glow {
+      opacity: 0.25;
+    }
+
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__borders span {
+      opacity: 1;
+    }
+
+    /* انیمیشن‌ها همان‌طور باقی می‌مانند */
+    @keyframes borderFlow1 { 0% { transform: translateX(0); } 100% { transform: translateX(200%); } }
+    @keyframes borderFlow2 { 0% { transform: translateY(0); } 100% { transform: translateY(200%); } }
+    @keyframes borderFlow3 { 0% { transform: translateX(0); } 100% { transform: translateX(-200%); } }
+    @keyframes borderFlow4 { 0% { transform: translateY(0); } 100% { transform: translateY(-200%); } }
+
+    @keyframes particleExplosion {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--x, 20px)), calc(-50% + var(--y, 20px))) scale(0); opacity: 0; }
+    }
+
+    @keyframes ringPulse {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+
+    @keyframes sparkFlash {
+      0% { transform: rotate(var(--r, 0deg)) translateX(0) scale(1); opacity: 1; }
+      100% { transform: rotate(var(--r, 0deg)) translateX(30px) scale(0); opacity: 0; }
+    }
+
+    /* Particle Positions */
+    .neon-checkbox__particles span:nth-child(1) { --x: 25px; --y: -25px; }
+    .neon-checkbox__particles span:nth-child(2) { --x: -25px; --y: -25px; }
+    .neon-checkbox__particles span:nth-child(3) { --x: 25px; --y: 25px; }
+    .neon-checkbox__particles span:nth-child(4) { --x: -25px; --y: 25px; }
+    .neon-checkbox__particles span:nth-child(5) { --x: 35px; --y: 0px; }
+    .neon-checkbox__particles span:nth-child(6) { --x: -35px; --y: 0px; }
+    .neon-checkbox__particles span:nth-child(7) { --x: 0px; --y: 35px; }
+    .neon-checkbox__particles span:nth-child(8) { --x: 0px; --y: -35px; }
+    .neon-checkbox__particles span:nth-child(9) { --x: 20px; --y: -30px; }
+    .neon-checkbox__particles span:nth-child(10) { --x: -20px; --y: 30px; }
+    .neon-checkbox__particles span:nth-child(11) { --x: 30px; --y: 20px; }
+    .neon-checkbox__particles span:nth-child(12) { --x: -30px; --y: -20px; }
+
+    /* Spark Rotations */
+    .neon-checkbox__sparks span:nth-child(1) { --r: 0deg; top: 50%; left: 50%; }
+    .neon-checkbox__sparks span:nth-child(2) { --r: 90deg; top: 50%; left: 50%; }
+    .neon-checkbox__sparks span:nth-child(3) { --r: 180deg; top: 50%; left: 50%; }
+    .neon-checkbox__sparks span:nth-child(4) { --r: 270deg; top: 50%; left: 50%; }
+
+    /* Ring Delays */
+    .neon-checkbox__rings .ring:nth-child(1) { animation-delay: 0s; }
+    .neon-checkbox__rings .ring:nth-child(2) { animation-delay: 0.1s; }
+    .neon-checkbox__rings .ring:nth-child(3) { animation-delay: 0.2s; }
+
+    /* انیمیشن ذرات و جرقه‌ها در حالت checked */
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__particles span {
+      animation: particleExplosion 0.6s ease-out forwards;
+    }
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__rings .ring {
+      animation: ringPulse 0.6s ease-out forwards;
+    }
+    .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__sparks span {
+      animation: sparkFlash 0.6s ease-out forwards;
+    }
+  </style>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #0f0f1b;">
+
+  <label class="neon-checkbox">
+    <input type="checkbox" />
+    <div class="neon-checkbox__frame">
+      <div class="neon-checkbox__box">
+        <!-- قلب SVG -->
+        <div class="neon-checkbox__check-container">
+          <svg class="neon-checkbox__check" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="neon-checkbox__glow"></div>
+        <div class="neon-checkbox__borders">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="neon-checkbox__effects">
+        <div class="neon-checkbox__particles">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="neon-checkbox__rings">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+        </div>
+        <div class="neon-checkbox__sparks">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </label>
+
+</body>
+</html>
