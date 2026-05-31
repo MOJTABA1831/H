@@ -1,1 +1,51 @@
+        <label>Displacement Scale: <input type="range" id="dispScale" min="0" max="1" step="0.001" value="0.08"></label>
+        <label>Roughness: <input type="range" id="roughness" min="0" max="1" step="0.01" value="0.5"></label>
+        <label>Metalness: <input type="range" id="metalness" min="0" max="1" step="0.01" value="0.0"></label>
+        <label><input type="checkbox" id="wireframe"> Wireframe</label>
+        <label><input type="checkbox" id="dragTex"> Drag texture (move)</label>
+      </section>
 
+      <section class="group">
+        <h2 data-i18n="export">Export / Download</h2>
+        <div class="export-buttons">
+          <button id="downloadTexture">Download Texture (PNG)</button>
+          <button id="downloadGLB">Download .glb</button>
+          <button id="downloadGLTF">Download .gltf</button>
+          <button id="downloadOBJ">Download .obj</button>
+          <button id="downloadSTL">Download .stl</button>
+          <button id="downloadPLY">Download .ply</button>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 data-i18n="settings">تنظیمات هندسه / عملکرد</h2>
+        <label>Segments: <input type="number" id="segments" min="16" max="512" step="1" value="256"></label>
+        <button id="regenGeom">Recreate Geometry</button>
+        <p class="hint">برای تغییر کیفیت هندسه از regen استفاده کن. دقت بالا → displacement دقیق‌تر اما سنگین‌تر.</p>
+      </section>
+    </aside>
+
+    <section id="canvasWrap">
+      <div id="rendererContainer"></div>
+      <div id="bottomBar">
+        <span id="info">Drag to rotate. Scroll to zoom. Use panel to change texture.</span>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="scratch" style="display:none;"></canvas>
+
+  <!-- three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"></script>
+  <!-- controls -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- exporters -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/exporters/GLTFExporter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/exporters/OBJExporter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/exporters/STLExporter.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.150.1/examples/js/exporters/PLYExporter.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
